@@ -12,7 +12,7 @@ app.use(bodyParser.json({
 }));
 const oasTools = require('oas-tools');
 const jsyaml = require('js-yaml');
-const serverPort = 8080;
+const serverPort = process.env.PORT || 8080;
 
 const spec = fs.readFileSync(path.join(__dirname, '/api/oas-doc.yaml'), 'utf8');
 const oasDoc = jsyaml.safeLoad(spec);
