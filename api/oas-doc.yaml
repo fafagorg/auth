@@ -1,0 +1,279 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Users & Authentication API
+  description: Component in charge of user management and authentication
+  license:
+    name: MIT
+    url: 'http://opensource.org/licenses/MIT'
+tags:
+  - name: User
+    description: User related operations
+  - name: Authentication
+    description: Authentication related operations
+paths:
+  /api/v1/users:
+    get:
+      tags:
+        - User
+      description: Returns all users
+      operationId: getUsers
+      x-swagger-router-controller: userController
+      responses:
+        '200':
+          description: Users list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/user'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  '/api/v1/users/{username}':
+    get:
+      tags:
+        - User
+      description: Returns a user by username
+      operationId: findUser
+      x-swagger-router-controller: userController
+      parameters:
+        - name: username
+          in: path
+          description: username of user to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    delete:
+      tags:
+        - User
+      description: Deletes a single user based on the username
+      operationId: deleteUser
+      x-swagger-router-controller: userController
+      parameters:
+        - name: username
+          in: path
+          description: username of user to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    put:
+      tags:
+        - User
+      description: Update an user identified by the username given
+      operationId: updateUser
+      x-swagger-router-controller: userController
+      parameters:
+        - name: username
+          in: path
+          description: username of user to put
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User updated
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+      requestBody:
+        x-name: user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        description: User to be updated
+        required: true
+  '/api/v1/profile/{username}':
+    get:
+      tags:
+        - User
+      description: Returns a user by username with extra information
+      operationId: getProfile
+      x-swagger-router-controller: userController
+      parameters:
+        - name: username
+          in: path
+          description: username of user to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profile returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /api/v1/auth/register:
+    post:
+      tags:
+        - Authentication
+      description: Creates a new user
+      operationId: authRegister
+      x-swagger-router-controller: authController
+      responses:
+        '201':
+          description: User created
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+      requestBody:
+        x-name: user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        description: User to be created
+        required: true
+  /api/v1/auth/login:
+    post:
+      tags:
+        - Authentication
+      description: Logs in an existing user
+      operationId: authLogin
+      x-swagger-router-controller: authController
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authObject'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+      requestBody:
+        x-name: user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginObject'
+        description: Logging in information
+        required: true
+  /api/v1/auth/validate:
+    post:
+      tags:
+        - Authentication
+      description: Creates a new user
+      operationId: authValidate
+      x-swagger-router-controller: authController
+      responses:
+        '200':
+          description: Auth user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+      requestBody:
+        x-name: user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authObject'
+        description: Auth information to be validated
+        required: true
+components:
+  schemas:
+    errorModel:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    user:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+        surname:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          minLength: 1
+        phone:
+          type: string
+          minLength: 1
+      required:
+        - username
+        - name
+        - surname
+        - email
+        - phone
+    loginObject:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+      required:
+        - username
+        - password
+    authObject:
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+      required:
+        - token
