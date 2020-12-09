@@ -1,4 +1,5 @@
 'use strict';
+const connection = require('./connection'); // Database connection
 
 const fs = require('fs');
 const http = require('http');
@@ -25,6 +26,11 @@ const optionsObject = {
   validator: true
 };
 
+app.use((req, res, next) => {
+  req.connection = connection;
+  next();
+});
+
 oasTools.configure(optionsObject);
 
 oasTools.initialize(oasDoc, app, function () {
@@ -37,6 +43,7 @@ oasTools.initialize(oasDoc, app, function () {
     }
   });
 });
+
 
 app.get('/info', function (req, res) {
   res.send({
