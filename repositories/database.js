@@ -1,4 +1,6 @@
 const userModel = require('../models/user');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 // Get all users
 exports.getUsers = async () => {
@@ -7,22 +9,47 @@ exports.getUsers = async () => {
 
 // Get an user by username
 exports.getUser = async (username) => {
-  return await userModel.find({ username: username }).exec()
-};
-
-// Add a new user
-exports.addUser = async (user) => {
-  return userModel.create(user);
+  return await userModel.find({ username: username }).exec();
 };
 
 // Delete an user
 
 exports.deleteUser = async (username) => {
-  return await userModel.deleteOne({ username: username }).exec()
+  return await userModel.deleteOne({ username: username }).exec();
 };
 
 // Update an user
 
 exports.updateUser = async (username, user) => {
-  return await userModel.updateOne({username: username}, user).exec()
+  return await userModel.updateOne({ username: username }, user).exec();
+};
+
+// Register
+exports.addUser = async (user) => {
+  user.password = bcrypt.hashSync(user.password, 10);
+  return userModel.create(user);
+};
+
+// Login
+
+exports.login = async (username, password) => {
+  return new Promise((resolve, reject) => {
+    userModel.findOne({ username: username }).exec().then((user) => {
+      if (!user) {
+        reject(new Error('User or password wrong'));
+      }
+
+      if (!bcrypt.compareSync(password, user.password)) {
+        reject(new Error('User or password wrong'));
+      }
+      const token = jwt.sign({
+        usuario: user
+      }, process.env.SEED_AUTENTICACION, {
+        expiresIn: process.env.TOKEN_EXPIRATION
+      });
+      resolve(token);
+    }).catch((err) => {
+      reject(new Error(err));
+    });
+  });
 };

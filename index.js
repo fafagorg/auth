@@ -8,6 +8,11 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+
+process.env.TOKEN_EXPIRATION = '24h';
+
+process.env.SEED_AUTENTICACION = process.env.SEED_AUTENTICACION || 'seed-develop';
+
 app.use(bodyParser.json({
   strict: false
 }));
