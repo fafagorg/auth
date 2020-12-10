@@ -6,6 +6,7 @@ mongoose.connect('mongodb://localhost:27017/users_fafago_db', {
   useUnifiedTopology: true
 });
 
+
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error:'));
 // enlaza el track de error a la consola (proceso actual)

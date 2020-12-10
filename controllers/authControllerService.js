@@ -1,21 +1,27 @@
 'use strict';
 
-const database_repository = require('../repositories/database')
+const database_repository = require('../repositories/database');
 
 module.exports.authRegister = function authRegister (req, res, next) {
-
+  
   const user = {
     username: req.user.value.username,
     password: req.user.value.password,
     name: req.user.value.name,
     surname: req.user.value.surname,
     email: req.user.value.email,
-    phone: req.user.value.passwordphone
+    phone: req.user.value.phone
   };
 
-  database_repository.addUser(user)
-  res.status(200).send({
-    message: 'User created correctly'
+  database_repository.addUser(user).then(() => {
+    res.status(201).send({
+      message: 'User created correctly'
+    });
+  }).catch((err) => {
+    if (err.status && err.message) {
+      res.status(err.status).send({ err: err.message });
+    }
+    res.status(500).send({ err });
   });
 };
 
