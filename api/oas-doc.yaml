@@ -5,7 +5,7 @@ info:
   description: Component in charge of user management and authentication
   license:
     name: MIT
-    url: 'http://opensource.org/licenses/MIT'
+    url: "http://opensource.org/licenses/MIT"
 tags:
   - name: User
     description: User related operations
@@ -20,21 +20,21 @@ paths:
       operationId: getUsers
       x-swagger-router-controller: userController
       responses:
-        '200':
+        "200":
           description: Users list
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/user'
+                  $ref: "#/components/schemas/user"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorModel'
-  '/api/v1/users/{username}':
+                $ref: "#/components/schemas/errorModel"
+  "/api/v1/users/{username}":
     get:
       tags:
         - User
@@ -49,18 +49,22 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: User returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: "#/components/schemas/user"
+        "400":
+          description: User not found
+        "404":
+          description: Pet not found
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorModel'
+                $ref: "#/components/schemas/errorModel"
     delete:
       tags:
         - User
@@ -75,14 +79,14 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: User deleted
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorModel'
+                $ref: "#/components/schemas/errorModel"
     put:
       tags:
         - User
@@ -97,23 +101,23 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: User updated
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorModel'
+                $ref: "#/components/schemas/errorModel"
       requestBody:
         x-name: user
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/user'
+              $ref: "#/components/schemas/user"
         description: User to be updated
         required: true
-  '/api/v1/profile/{username}':
+  "/api/v1/profile/{username}":
     get:
       tags:
         - User
@@ -128,18 +132,18 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Profile returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: "#/components/schemas/user"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorModel'
+                $ref: "#/components/schemas/errorModel"
   /api/v1/auth/register:
     post:
       tags:
@@ -148,20 +152,20 @@ paths:
       operationId: authRegister
       x-swagger-router-controller: authController
       responses:
-        '201':
+        "201":
           description: User created
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorModel'
+                $ref: "#/components/schemas/errorModel"
       requestBody:
         x-name: user
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/user'
+              $ref: "#/components/schemas/user"
         description: User to be created
         required: true
   /api/v1/auth/login:
@@ -172,24 +176,24 @@ paths:
       operationId: authLogin
       x-swagger-router-controller: authController
       responses:
-        '200':
+        "200":
           description: Login success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/authObject'
+                $ref: "#/components/schemas/authObject"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorModel'
+                $ref: "#/components/schemas/errorModel"
       requestBody:
         x-name: user
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/loginObject'
+              $ref: "#/components/schemas/loginObject"
         description: Logging in information
         required: true
   /api/v1/auth/validate:
@@ -200,24 +204,24 @@ paths:
       operationId: authValidate
       x-swagger-router-controller: authController
       responses:
-        '200':
+        "200":
           description: Auth user
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: "#/components/schemas/user"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorModel'
+                $ref: "#/components/schemas/errorModel"
       requestBody:
         x-name: user
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/authObject'
+              $ref: "#/components/schemas/authObject"
         description: Auth information to be validated
         required: true
 components:
