@@ -48,18 +48,18 @@ module.exports.authLogin = function authLogin (req, res, next) {
 };
 
 module.exports.authValidate = function authValidate (req, res, next) {
-  var token = req.user.value.token;
-  console.log(req.user.value.token)
+  const token = req.user.value.token;
+  console.log(req.user.value.token);
   if (token) {
-    databaseRepository.validateToken(token).then((valid)=>{
-      console.log(valid)
+    databaseRepository.validateToken(token).then((valid) => {
+      console.log(valid);
       if (valid) {
         res.status(200).send({ message: 'Token correct' });
       } else {
         res.status(401).send({ err: 'Token not valid' });
       }
     });
-  }else {
+  } else {
     res.status(401).send({ err: 'Token not provided' });
   }
 };

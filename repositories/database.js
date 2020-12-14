@@ -70,5 +70,5 @@ exports.validateToken = async (token) => {
     } else {
       resolve(false);
     }
-    });
+  });
 };
