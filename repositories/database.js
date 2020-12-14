@@ -25,6 +25,7 @@ exports.updateUser = async (username, user) => {
 };
 
 // Register
+
 exports.addUser = async (user) => {
   user.password = bcrypt.hashSync(user.password, 10);
   return userModel.create(user);
@@ -52,4 +53,22 @@ exports.login = async (username, password) => {
       reject(new Error(err));
     });
   });
+};
+
+// Validate token auth
+
+exports.validateToken = async (token) => {
+  return new Promise((resolve, reject) => {
+    if (token) {
+      jwt.verify(token, process.env.SEED_AUTENTICACION, (err) => {
+        if (err) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    } else {
+      resolve(false);
+    }
+    });
 };
