@@ -18,6 +18,7 @@
   "license": "Unlicense",
   "private": true,
   "dependencies": {
+    "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
@@ -25,7 +26,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.6",
     "mongoose-unique-validator": "^2.0.3",
-    "oas-tools": "^2.1.4"
+    "oas-tools": "^2.1.4",
+    "redis": "^3.0.2"
   },
   "devDependencies": {
     "mocha": "^8.2.1",
