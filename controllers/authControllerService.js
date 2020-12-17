@@ -49,14 +49,12 @@ module.exports.authLogin = function authLogin (req, res, next) {
 
 module.exports.authValidate = function authValidate (req, res, next) {
   const token = req.user.value.token;
-  console.log(req.user.value.token);
   if (token) {
     databaseRepository.validateToken(token).then((valid) => {
-      console.log(valid);
       if (valid) {
-        res.status(200).send({ message: 'Token correct' });
+        res.status(200).send({userId: valid.userId});
       } else {
-        res.status(401).send({ err: 'Token not valid' });
+        res.status(403).send({ err: 'Token not valid' });
       }
     });
   } else {

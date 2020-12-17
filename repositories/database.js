@@ -60,11 +60,11 @@ exports.login = async (username, password) => {
 exports.validateToken = async (token) => {
   return new Promise((resolve, reject) => {
     if (token) {
-      jwt.verify(token, process.env.SEED_AUTENTICACION, (err) => {
+      jwt.verify(token, process.env.SEED_AUTENTICACION, (err, decoded) => {
         if (err) {
           resolve(false);
         } else {
-          resolve(true);
+          resolve(decoded);
         }
       });
     } else {
