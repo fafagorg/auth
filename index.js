@@ -1,4 +1,5 @@
 'use strict';
+
 const connection = require('./connection'); // Database connection
 
 const fs = require('fs');
