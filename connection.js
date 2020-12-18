@@ -8,26 +8,24 @@ const {
 
 const options = {
   useNewUrlParser: true,
-  reconnectTries: Number.MAX_VALUE,
-  reconnectInterval: 500,
-  connectTimeoutMS: 10000
+  connectTimeoutMS: 10000,
+  useUnifiedTopology: true
 };
 
 const url = `mongodb://172.17.0.1:${MONGO_PORT}/${MONGO_DB}`;
-console.log(url);
-const ms = 10000;
+
+const MONGO_RETRY_INTERVAL = 10000; // In milliseconds
 
 const connect = () => {
   mongoose.connect(url, options).then(function () {
     console.log('MongoDB is connected');
-  })
-    .catch(function (err) {
-      setTimeout(() => {
-        connect();
-      }, ms);
-      console.log('Failed connected to mongo, retrying in ' + ms);
-      console.log(err);
-    });
+  }).catch(function (err) {
+    setTimeout(() => {
+      connect();
+    }, MONGO_RETRY_INTERVAL);
+    console.log('Failed to connect to mongo, retrying in ' + MONGO_RETRY_INTERVAL / 1000 + 's');
+    console.log(err);
+  });
 };
 
 connect();
