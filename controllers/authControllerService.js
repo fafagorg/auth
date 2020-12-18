@@ -48,7 +48,16 @@ module.exports.authLogin = function authLogin (req, res, next) {
 };
 
 module.exports.authValidate = function authValidate (req, res, next) {
-  res.send({
-    message: 'This is the mockup controller for authValidate'
-  });
+  const token = req.user.value.token;
+  if (token) {
+    databaseRepository.validateToken(token).then((valid) => {
+      if (valid) {
+        res.status(200).send({ userId: valid.userId });
+      } else {
+        res.status(403).send({ err: 'Token not valid' });
+      }
+    });
+  } else {
+    res.status(401).send({ err: 'Token not provided' });
+  }
 };
