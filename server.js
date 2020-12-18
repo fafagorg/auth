@@ -27,7 +27,7 @@ const deploy = (env) => {
     const oasDoc = jsyaml.safeLoad(spec);
 
     const optionsObject = {
-      controllers: path.join(__dirname, './controllers'),
+      controllers: path.join(__dirname, './src/controllers'),
       loglevel: env === 'test' ? 'error' : 'info',
       strict: false,
       router: true,
