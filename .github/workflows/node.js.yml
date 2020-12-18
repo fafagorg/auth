@@ -5,9 +5,9 @@ name: Node.js CI Test, coverage and linting and CD build and push to Docker Hub
 
 on:
   push:
-    branches: [ main, test ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, test ]
+    branches: [ main, develop ]
 
 jobs:
   test:
@@ -64,7 +64,7 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}  
   buildTest:
-    if: ${{ github.ref == 'refs/heads/test' && github.event_name == 'push' }}
+    if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
     needs: test
     runs-on: ubuntu-latest
     steps:
