@@ -1,0 +1,9 @@
+[
+    {
+        "name": "Products",
+        "type": "GET",
+        "requestAPI": "http://",
+        "requestEndpoint": "/api/v1/",
+        "response": {}
+      }
+]
