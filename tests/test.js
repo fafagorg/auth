@@ -47,7 +47,7 @@ describe('Tests array', function () {
 function apiDBControllersTest() {
   describe('#usersGET', function () {
     it('should respond with ...', function (done) {
-      axios.post(url, body, options).then(response => {
+      axios.get(url, options).then(response => {
         /* assert.notStrictEqual(expected, response);
         assert.deepStrictEqual(expected, response);
         assert.strictEqual(expected, response); */

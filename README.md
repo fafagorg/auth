@@ -13,7 +13,7 @@ This repository contains all the code belonging to the authentication and client
 
 # CI/CD
 
-On branch update [main, test], if CI passes:
+On branch update [main, develop], if CI passes:
 - The server is automatically deployed to Heroku on push to this two branches to maintain two different versions of it:
     - Production: https://fafago-auth.herokuapp.com/docs/
     - Staging: https://fafago-auth-test.herokuapp.com/docs/

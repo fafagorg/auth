@@ -5,10 +5,10 @@ const path = require('path');
 module.exports.instantiateMockups = () => {
   return new Promise((resolve, reject) => {
     buildMockups(fs.readFileSync(path.join(__dirname, '/nockMockups.json'), 'utf-8'), '/nockMockups.json').then(() => {
-      console.log("Loaded testing mockups!");
+      console.log("    Successfully loaded testing mockups!");
       resolve();
     }).catch((err) => {
-      console.log('No mockups file could be found! (nockMockups.json)');
+      console.log('    No mockups file could be found! (nockMockups.json)');
       reject(err);
     });
   });
