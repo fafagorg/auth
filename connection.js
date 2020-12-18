@@ -23,7 +23,7 @@ const connect = () => {
     setTimeout(() => {
       connect();
     }, MONGO_RETRY_INTERVAL);
-    console.log('Failed to connect to mongo, retrying in ' + MONGO_RETRY_INTERVAL/1000 + 's');
+    console.log('Failed to connect to mongo, retrying in ' + MONGO_RETRY_INTERVAL / 1000 + 's');
     console.log(err);
   });
 };
