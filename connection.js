@@ -14,10 +14,10 @@ const options = {
 
 let url;
 
-if(MONGO_PORT && MONGO_DB){
-  url = `mongodb://172.17.0.1:${MONGO_PORT}/${MONGO_DB}`;
+if (MONGO_PORT && MONGO_DB) {
+  url = `mongodb://mongoauth/${MONGO_DB}`;
 } else {
-  url = `mongodb://localhost:27017/fafago_user_db`;
+  url = 'mongodb://localhost:27017/fafago_user_db';
 }
 
 const MONGO_RETRY_INTERVAL = 10000; // In milliseconds
