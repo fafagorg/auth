@@ -28,19 +28,17 @@ exports.updateUser = async (username, user) => {
 // Register
 
 exports.addUser = async (user) => {
-  return new Promise((resolve, reject) =>{
-    userModel.findOne({username:user.username}).exec().then((u) =>{
-      if (u!=null){
-        resolve(false)
-      }else{
+  return new Promise((resolve, reject) => {
+    userModel.findOne({ username: user.username }).exec().then((u) => {
+      if (u != null) {
+        resolve(false);
+      } else {
         user.password = bcrypt.hashSync(user.password, 10);
-        userModel.create(user)
-        resolve(true)
+        userModel.create(user);
+        resolve(true);
       }
-    })
-  
-  })
-
+    });
+  });
 };
 
 // Login

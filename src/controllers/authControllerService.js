@@ -1,6 +1,5 @@
 'use strict';
 
-const { create } = require('../models/user');
 const databaseRepository = require('../repositories/database');
 
 module.exports.authRegister = function authRegister (req, res, next) {
@@ -14,11 +13,11 @@ module.exports.authRegister = function authRegister (req, res, next) {
   };
 
   databaseRepository.addUser(user).then((created) => {
-    if(created){
+    if (created) {
       res.status(201).send({
         message: 'User created correctly'
       });
-    }else{
+    } else {
       res.status(409).send({
         message: 'Username is already taken'
       });
