@@ -79,7 +79,7 @@ paths:
           schema:
             type: string
       responses:
-        "204":
+        "202":
           description: User deleted
         default:
           description: unexpected error
@@ -114,7 +114,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/user"
+              $ref: "#/components/schemas/registerObject"
         description: User to be updated
         required: true
   "/api/v1/profile/{username}":
@@ -154,6 +154,8 @@ paths:
       responses:
         "201":
           description: User created
+        "409":
+          description: Username is already taken
         default:
           description: unexpected error
           content:
@@ -165,7 +167,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/user"
+              $ref: "#/components/schemas/registerObject"
         description: User to be created
         required: true
   /api/v1/auth/login:
@@ -261,6 +263,34 @@ components:
         - surname
         - email
         - phone
+    registerObject:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+        surname:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          minLength: 1
+        phone:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+      required:
+        - username
+        - name
+        - surname
+        - email
+        - phone
+        - password
     loginObject:
       type: object
       properties:

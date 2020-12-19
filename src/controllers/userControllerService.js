@@ -4,7 +4,6 @@ const databaseRepository = require('../repositories/database');
 
 module.exports.getUsers = function getUsers (req, res, next) {
   databaseRepository.getUsers().then((doc) => {
-    console.log(doc);
     res.status(200).send(doc);
   }).catch((err) => {
     if (err.status && err.message) {
@@ -31,9 +30,7 @@ module.exports.findUser = function findUser (req, res, next) {
 
 module.exports.deleteUser = function deleteUser (req, res, next) {
   databaseRepository.deleteUser(req.username.value).then((doc) => {
-    res.status(200).send({
-      message: 'User deleted correctly'
-    });
+    res.status(202).send();
   }).catch((err) => {
     if (err.status && err.message) {
       res.status(err.status).send({ err: err.message });

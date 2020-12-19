@@ -21,14 +21,26 @@ exports.deleteUser = async (username) => {
 // Update an user
 
 exports.updateUser = async (username, user) => {
+  user.password = bcrypt.hashSync(user.password, 10);
   return await userModel.updateOne({ username: username }, user).exec();
 };
 
 // Register
 
 exports.addUser = async (user) => {
-  user.password = bcrypt.hashSync(user.password, 10);
-  return userModel.create(user);
+  return new Promise((resolve, reject) =>{
+    userModel.findOne({username:user.username}).exec().then((u) =>{
+      if (u!=null){
+        resolve(false)
+      }else{
+        user.password = bcrypt.hashSync(user.password, 10);
+        userModel.create(user)
+        resolve(true)
+      }
+    })
+  
+  })
+
 };
 
 // Login

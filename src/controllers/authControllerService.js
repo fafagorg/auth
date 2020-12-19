@@ -1,5 +1,6 @@
 'use strict';
 
+const { create } = require('../models/user');
 const databaseRepository = require('../repositories/database');
 
 module.exports.authRegister = function authRegister (req, res, next) {
@@ -12,10 +13,16 @@ module.exports.authRegister = function authRegister (req, res, next) {
     phone: req.user.value.phone
   };
 
-  databaseRepository.addUser(user).then(() => {
-    res.status(201).send({
-      message: 'User created correctly'
-    });
+  databaseRepository.addUser(user).then((created) => {
+    if(created){
+      res.status(201).send({
+        message: 'User created correctly'
+      });
+    }else{
+      res.status(409).send({
+        message: 'Username is already taken'
+      });
+    }
   }).catch((err) => {
     if (err.status && err.message) {
       res.status(err.status).send({ err: err.message });
@@ -27,7 +34,6 @@ module.exports.authRegister = function authRegister (req, res, next) {
 module.exports.authLogin = function authLogin (req, res, next) {
   const login = req.user.value;
   databaseRepository.login(login.username, login.password).then((token) => {
-    console.log(token);
     if (token !== undefined) {
       res.status(200).send({
         ok: true,
