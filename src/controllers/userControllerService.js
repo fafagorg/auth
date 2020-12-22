@@ -16,7 +16,7 @@ module.exports.getUsers = function getUsers (req, res, next) {
 module.exports.findUser = function findUser (req, res, next) {
   databaseRepository.getUser(req.username.value).then((doc) => {
     if (doc === null || doc.length === 0) {
-      res.status(400).send({ err: 'User not found' });
+      res.status(404).send({ err: 'User not found' });
     } else {
       res.status(200).send(doc);
     }
@@ -50,9 +50,15 @@ module.exports.updateUser = function updateUser (req, res, next) {
   };
 
   databaseRepository.updateUser(req.username.value, user).then((doc) => {
-    res.status(204).send(
-      { message: 'User updated correctly' }
-    );
+    if (doc.nModified === 0) {
+      res.status(404).send(
+        { message: 'User not found' }
+      );
+    } else {
+      res.status(204).send(
+        { message: 'User updated correctly' }
+      );
+    }
   }).catch((err) => {
     if (err.status && err.message) {
       res.status(err.status).send({ err: err.message });

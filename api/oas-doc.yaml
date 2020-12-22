@@ -55,10 +55,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user"
-        "400":
-          description: User not found
         "404":
-          description: Pet not found
+          description: User not found
         default:
           description: unexpected error
           content:
@@ -103,6 +101,8 @@ paths:
       responses:
         "204":
           description: User updated
+        "404":
+          description: User not found
         default:
           description: unexpected error
           content:

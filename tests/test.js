@@ -7,7 +7,8 @@ const server = require('../server');
 const user = require('../src/models/user');
 const nockController = require('./nockController');
 
-const base_url = 'http://localhost:8081'
+
+const base_url = 'http://localhost:'+server.serverPort
 
 const example_user = {
   "username": "username",
@@ -189,6 +190,31 @@ function apiDBControllersTest() {
     });
   })
 
+  describe('#userGET(Does not exist)', function () {
+    it('Should respond with a 404 Not found', function (done) {
+      var url = base_url + '/api/v1/users/' + example_user.username
+      axios.get(url).then(response => {
+      }).catch(err => {
+        assert.strictEqual(404, err.response.status)
+        done();
+      });
+    });
+  });
+  
+
+  describe('#userPut(Does not exist)', function () {
+    it('Should respond with a 404 Not found', function (done) {
+      var changedName = 'change'
+      var url = base_url + '/api/v1/users/' + example_user.username
+      body= example_user
+      body.name = changedName
+      axios.put(url, body).then(response => {
+      }).catch(err => {
+        assert.strictEqual(404, err.response.status)
+        done();
+      });
+    });
+  })
 
   
 }
