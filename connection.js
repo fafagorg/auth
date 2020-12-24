@@ -17,7 +17,7 @@ let url;
 if (MONGO_PORT && MONGO_DB) {
   url = `mongodb://mongoauth/${MONGO_DB}`;
 } else {
-  url = 'mongodb://localhost:27017/fafago_user_db';
+  url = 'mongodb://localhost:27018/fafago_user_db';
 }
 
 const MONGO_RETRY_INTERVAL = 10000; // In milliseconds
