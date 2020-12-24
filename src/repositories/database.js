@@ -30,12 +30,16 @@ exports.updateUser = async (username, user) => {
 exports.addUser = async (user) => {
   return new Promise((resolve, reject) => {
     userModel.findOne({ username: user.username }).exec().then((u) => {
+      console.log(u)
       if (u != null) {
         resolve(false);
       } else {
         user.password = bcrypt.hashSync(user.password, 10);
-        userModel.create(user);
-        resolve(true);
+        var model = userModel.create(user).then((m) =>{
+          resolve(true);
+        }).catch((err)=>{
+          reject(err);
+        })
       }
     });
   });
