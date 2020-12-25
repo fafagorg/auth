@@ -7,33 +7,33 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
-  password:{
+  password: {
     type: String,
     required: true,
     min: 3
   },
-  name:{
+  name: {
     type: String,
     required: true
   },
-  surname:{
+  surname: {
     type: String,
     required: true
   },
-  email:{
+  email: {
     type: String,
     required: true
   },
-  phone:{
+  phone: {
     type: String,
     required: true,
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^\d{9}$/.test(v);
       },
       message: props => `${props.value} is not a valid phone number`
-    },
-  },
+    }
+  }
 });
 
 // Delete the password from the return
