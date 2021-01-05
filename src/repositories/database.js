@@ -58,8 +58,8 @@ exports.login = async (username, password) => {
         reject(new Error('User or password wrong'));
       }
       const token = jwt.sign({
-        usuario: user
-      }, process.env.SEED_AUTENTICACION, {
+        user: user
+      }, process.env.SEED_AUTENTICATION, {
         expiresIn: process.env.TOKEN_EXPIRATION
       });
       resolve(token);
@@ -74,7 +74,7 @@ exports.login = async (username, password) => {
 exports.validateToken = async (token) => {
   return new Promise((resolve, reject) => {
     if (token) {
-      jwt.verify(token, process.env.SEED_AUTENTICACION, (err, decoded) => {
+      jwt.verify(token, process.env.SEED_AUTENTICATION, (err, decoded) => {
         if (err) {
           resolve(false);
         } else {

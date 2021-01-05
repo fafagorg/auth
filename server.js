@@ -1,6 +1,6 @@
 'use strict';
 
-const serverPort = process.env.PORT || 8080;
+const serverPort = process.env.PORT || 8081;
 
 const deploy = (env) => {
   return new Promise((resolve, reject) => {
@@ -16,7 +16,7 @@ const deploy = (env) => {
 
     process.env.TOKEN_EXPIRATION = '24h';
 
-    process.env.SEED_AUTENTICACION = process.env.SEED_AUTENTICACION || 'seed-develop';
+    process.env.SEED_AUTENTICATION = process.env.SEED_AUTENTICATION || 'seed-develop';
 
     app.use(bodyParser.json({
       strict: false
