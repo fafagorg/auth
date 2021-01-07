@@ -5,13 +5,35 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     unique: true,
-    require: true
+    required: true
   },
-  password: String,
-  name: String,
-  surname: String,
-  email: String,
-  phone: String
+  password: {
+    type: String,
+    required: true,
+    min: 3
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  surname: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        return /^\d{9}$/.test(v);
+      },
+      message: props => `${props.value} is not a valid phone number`
+    }
+  }
 });
 
 // Delete the password from the return

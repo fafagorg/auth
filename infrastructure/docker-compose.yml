@@ -3,26 +3,27 @@ version: "3.8"
 services:
   auth:
     container_name: fafago-auth
-    image: 'fafagoauth/auth:testdb'
+    image: 'fafagoauth/auth:test'
     environment:
       - NODE_ENV=production
       - PORT=80
       - MONGO_PORT=${MONGO_PORT}
       - MONGO_DB=${MONGO_DB}
     ports:
-      - "8080:80"
+      - "80:80"
     networks:
-      - auth-network
+      - auth_network
     mem_limit: 500m
     restart: 'unless-stopped'
   auth_mongo:
     container_name: fafago-auth-mongo
     image: 'mongo'
-    restart: "unless-stopped"
-    ports:
-      - "27018:27017"
+#    ports:
+#      - "27017:27017"
     networks:
-      - auth-network
+      auth_network:
+        aliases:
+          - mongoauth
     volumes:
       - 'auth_mongo_volume:/data/db'
     mem_limit: 1000m
@@ -30,16 +31,17 @@ services:
   auth_redis:
     container_name: fafago-auth-redis
     image: 'redis'
+#    ports:
+#      - "6379:6379"
     networks:
-      - auth-network
+      auth_network:
+        aliases:
+          - redisauth
     mem_limit: 1000m
     restart: "unless-stopped"
+
 networks:
-  auth-network:
-    driver: bridge
+  auth_network: null
 
 volumes:
   auth_mongo_volume: null
-networks:
-  auth-network:
-    external: false
