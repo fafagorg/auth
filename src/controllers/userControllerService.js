@@ -15,10 +15,10 @@ module.exports.getUsers = function getUsers (req, res, next) {
 
 module.exports.findUser = function findUser (req, res, next) {
   databaseRepository.getUser(req.username.value).then((doc) => {
-    if (doc === null || doc.length === 0) {
+    if (doc === null || doc === undefined || doc.length === 0) {
       res.status(404).send({ err: 'User not found' });
     } else {
-      res.status(200).send(doc);
+      res.status(200).send(doc[0]);
     }
   }).catch((err) => {
     if (err.status && err.message) {
