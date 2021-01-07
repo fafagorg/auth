@@ -57,7 +57,6 @@ module.exports.authValidate = function authValidate (req, res, next) {
   if (token) {
     databaseRepository.validateToken(token).then((valid) => {
       if (valid) {
-        console.log(valid);
         res.status(200).send({ userId: valid.user.username });
       } else {
         res.status(403).send({ err: 'Token not valid' });
