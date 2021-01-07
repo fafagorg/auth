@@ -30,7 +30,6 @@ exports.updateUser = async (username, user) => {
 exports.addUser = async (user) => {
   return new Promise((resolve, reject) => {
     userModel.findOne({ username: user.username }).exec().then((u) => {
-      console.log(u);
       if (u != null) {
         resolve(false);
       } else {
