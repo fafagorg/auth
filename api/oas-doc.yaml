@@ -207,11 +207,11 @@ paths:
       x-swagger-router-controller: authController
       responses:
         "200":
-          description: Auth user
+          description: Decoded token
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/user"
+                $ref: "#/components/schemas/decodedToken"
         default:
           description: unexpected error
           content:
@@ -311,3 +311,11 @@ components:
           minLength: 1
       required:
         - token
+    decodedToken:
+      type: object
+      properties:
+        userId:
+          type: string
+          minLength: 1
+      required:
+        - userId
