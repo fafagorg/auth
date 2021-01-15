@@ -9,7 +9,8 @@ module.exports.authRegister = function authRegister (req, res, next) {
     name: req.user.value.name,
     surname: req.user.value.surname,
     email: req.user.value.email,
-    phone: req.user.value.phone
+    phone: req.user.value.phone,
+    photo: req.user.value.photo
   };
 
   databaseRepository.addUser(user).then((created) => {

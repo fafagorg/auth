@@ -284,6 +284,8 @@ components:
         password:
           type: string
           minLength: 1
+        photo:
+          type: string
       required:
         - username
         - name
