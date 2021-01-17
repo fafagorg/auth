@@ -65,17 +65,21 @@ exports.addUser = async (user) => {
       if (u != null) {
         resolve(false);
       } else {
-        const name = Math.random().toString(36).substring(7);
-        let directory = 'temp/';
-        if (!fs.existsSync(directory)) {
-          fs.mkdirSync(directory);
+        console.log(user)
+        if(user.photo!=='' && user.photo!==undefined){
+          const name = Math.random().toString(36).substring(7);
+          let directory = 'temp/';
+          if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory);
+          }
+          directory = directory + name + '.jpg';
+  
+          const imageBuffer = decodeBase64Image(user.photo);
+          fs.writeFile(directory, imageBuffer.data, function (err) { console.log(err); });
+          const res = await cloudinary.v2.uploader.upload(directory);
+          user.photo = res.url;
         }
-        directory = directory + name + '.jpg';
-
-        const imageBuffer = decodeBase64Image(user.photo);
-        fs.writeFile(directory, imageBuffer.data, function (err) { console.log(err); });
-        const res = await cloudinary.v2.uploader.upload(directory);
-        user.photo = res.url;
+        console.log(user)
         user.password = bcrypt.hashSync(user.password, 10);
 
         try {
