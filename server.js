@@ -20,7 +20,7 @@ const deploy = (env) => {
 
     app.use(bodyParser.json({
       strict: false,
-      limit: '100mb'
+      limit: '10mb'
     }));
     const oasTools = require('oas-tools');
     const jsyaml = require('js-yaml');
