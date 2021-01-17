@@ -12,6 +12,8 @@ const deploy = (env) => {
 
     const express = require('express');
     const app = express();
+    const cors = require('cors');
+    app.use(cors());
     const bodyParser = require('body-parser');
 
     process.env.TOKEN_EXPIRATION = '24h';
