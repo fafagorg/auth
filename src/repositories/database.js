@@ -65,7 +65,6 @@ exports.addUser = async (user) => {
       if (u != null) {
         resolve(false);
       } else {
-        console.log(user);
         if (user.photo !== '' && user.photo !== undefined) {
           const name = Math.random().toString(36).substring(7);
           let directory = 'temp/';
@@ -85,7 +84,6 @@ exports.addUser = async (user) => {
             console.error(err);
           }
         }
-        console.log(user);
         user.password = bcrypt.hashSync(user.password, 10);
 
         userModel.create(user).then((m) => {
