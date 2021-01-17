@@ -19,7 +19,8 @@ const deploy = (env) => {
     process.env.SEED_AUTENTICATION = process.env.SEED_AUTENTICATION || 'seed-develop';
 
     app.use(bodyParser.json({
-      strict: false
+      strict: false,
+      limit: '10mb'
     }));
     const oasTools = require('oas-tools');
     const jsyaml = require('js-yaml');
