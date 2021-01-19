@@ -8,8 +8,8 @@ const MESSAGING_URL = process.env.CHAT_HOSTNAME;
 
 // Redis connection
 const redisClient = redis.createClient({
-    host: 'process.env.REDIS_HOSTNAME',
-    port: process.env.REDIS_PORT
+  host: process.env.REDIS_HOSTNAME,
+  port: process.env.REDIS_PORT
 });
 
 redisClient.on('error', function (error) {
