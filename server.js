@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config();
+
 const serverPort = process.env.PORT || 8081;
 
 const deploy = (env) => {
