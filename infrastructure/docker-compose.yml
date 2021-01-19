@@ -10,6 +10,10 @@ services:
       - MONGO_HOSTNAME=${MONGO_HOSTNAME}
       - MONGO_PORT=${MONGO_PORT}
       - MONGO_DB=${MONGO_DB}
+      - REDIS_HOSTNAME=${REDIS_HOSTNAME}
+      - REDIS_PORT=${REDIS_PORT}
+      - PRODUCTS_HOSTNAME=${PRODUCTS_HOSTNAME}
+      - REVIEWS_HOSTNAME${REVIEWS_HOSTNAME}
     ports:
       - "80:80"
     networks:
@@ -19,8 +23,8 @@ services:
   auth_mongo:
     container_name: fafago-auth-mongo
     image: 'mongo'
-    ports:
-      - "27017:27017"
+#    ports:
+#      - "27017:27017"
     networks:
       auth_network:
         aliases:
@@ -32,12 +36,12 @@ services:
   auth_redis:
     container_name: fafago-auth-redis
     image: 'redis'
-    ports:
-      - "6379:6379"
+#    ports:
+#      - "6379:6379"
     networks:
       auth_network:
         aliases:
-          - redisauth
+          - ${REDIS_HOSTNAME}
     mem_limit: 1000m
     restart: "unless-stopped"
 
