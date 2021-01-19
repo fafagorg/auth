@@ -7,6 +7,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=80
+      - MONGO_HOSTNAME=${MONGO_HOSTNAME}
       - MONGO_PORT=${MONGO_PORT}
       - MONGO_DB=${MONGO_DB}
     ports:
@@ -18,12 +19,12 @@ services:
   auth_mongo:
     container_name: fafago-auth-mongo
     image: 'mongo'
-#    ports:
-#      - "27017:27017"
+    ports:
+      - "27017:27017"
     networks:
       auth_network:
         aliases:
-          - mongoauth
+          - ${MONGO_HOSTNAME}
     volumes:
       - 'auth_mongo_volume:/data/db'
     mem_limit: 1000m
@@ -31,8 +32,8 @@ services:
   auth_redis:
     container_name: fafago-auth-redis
     image: 'redis'
-#    ports:
-#      - "6379:6379"
+    ports:
+      - "6379:6379"
     networks:
       auth_network:
         aliases:

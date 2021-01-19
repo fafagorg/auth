@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config();
+
 const server = require('./server');
 
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'production';
