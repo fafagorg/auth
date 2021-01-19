@@ -2,9 +2,9 @@ const axios = require('axios');
 const redis = require('redis');
 
 const CACHE_TTL = 5; // In seconds
-const PRODUCTS_URL = 'https://';
-const REVIEWS_URL = 'https://';
-const MESSAGING_URL = 'https://';
+const PRODUCTS_URL = process.env.PRODUCTS_HOSTNAME;
+const REVIEWS_URL = process.env.REVIEWS_HOSTNAME;
+const MESSAGING_URL = process.env.CHAT_HOSTNAME;
 
 // Redis connection
 const redisClient = redis.createClient();
@@ -18,7 +18,7 @@ exports.getUserProducts = (username) => {
   return new Promise((resolve, reject) => {
     getCache('userProducts-' + username).then((cached) => {
       if (cached === null) {
-        axios.get(PRODUCTS_URL + '/prducts/client/' + username).then(function (axiosResponse) {
+        axios.get(PRODUCTS_URL + '/api/v1/products/client/' + username).then(function (axiosResponse) {
           setCache('userProducts-' + username, axiosResponse);
           resolve(axiosResponse);
         }).catch(function (error) {
@@ -29,7 +29,7 @@ exports.getUserProducts = (username) => {
       }
     }).catch(err => {
       console.log('error - Redis cache failed. Requesting instead. Redis error:\n', err.message);
-      axios.get(PRODUCTS_URL + '/prducts/client/' + username).then(function (axiosResponse) {
+      axios.get(PRODUCTS_URL + '/api/v1/products/client/' + username).then(function (axiosResponse) {
         resolve(axiosResponse);
       }).catch(function (error) {
         reject(error);
@@ -43,7 +43,7 @@ exports.getUserReviews = (username) => {
   return new Promise((resolve, reject) => {
     getCache('userReviews-' + username).then((cached) => {
       if (cached === null) {
-        axios.get(REVIEWS_URL + '/reviews/client/' + username).then(function (axiosResponse) {
+        axios.get(REVIEWS_URL + '/api/v1/reviews/client/' + username).then(function (axiosResponse) {
           setCache('userReviews-' + username, axiosResponse);
           resolve(axiosResponse);
         }).catch(function (error) {
@@ -92,7 +92,10 @@ exports.getUserChats = (username) => {
 
 const setCache = (key, value) => {
   return new Promise((resolve, reject) => {
-    redisClient.set(key, value, 'EX', CACHE_TTL, (err, reply) => {
+    // Remove circular values
+    value.request = "removed for cache";
+    // Save cache
+    redisClient.set(key, JSON.stringify(value), 'EX', CACHE_TTL, (err, reply) => {
       if (err === null) {
         resolve();
       } else {
@@ -104,9 +107,10 @@ const setCache = (key, value) => {
 
 const getCache = (key) => {
   return new Promise((resolve, reject) => {
+    // Find and return cache
     redisClient.get(key, (err, reply) => {
       if (err === null) {
-        resolve(reply);
+        resolve(JSON.parse(reply));
       } else {
         reject(err);
       }
