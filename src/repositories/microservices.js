@@ -7,7 +7,10 @@ const REVIEWS_URL = process.env.REVIEWS_HOSTNAME;
 const MESSAGING_URL = process.env.CHAT_HOSTNAME;
 
 // Redis connection
-const redisClient = redis.createClient();
+const redisClient = redis.createClient({
+    host: 'process.env.REDIS_HOSTNAME',
+    port: process.env.REDIS_PORT
+});
 
 redisClient.on('error', function (error) {
   console.error(error);
