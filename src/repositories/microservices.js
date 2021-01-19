@@ -93,7 +93,7 @@ exports.getUserChats = (username) => {
 const setCache = (key, value) => {
   return new Promise((resolve, reject) => {
     // Remove circular values
-    value.request = "removed for cache";
+    value.request = 'removed for cache';
     // Save cache
     redisClient.set(key, JSON.stringify(value), 'EX', CACHE_TTL, (err, reply) => {
       if (err === null) {
