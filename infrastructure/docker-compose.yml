@@ -7,8 +7,13 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=80
+      - MONGO_HOSTNAME=${MONGO_HOSTNAME}
       - MONGO_PORT=${MONGO_PORT}
       - MONGO_DB=${MONGO_DB}
+      - REDIS_HOSTNAME=${REDIS_HOSTNAME}
+      - REDIS_PORT=${REDIS_PORT}
+      - PRODUCTS_HOSTNAME=${PRODUCTS_HOSTNAME}
+      - REVIEWS_HOSTNAME${REVIEWS_HOSTNAME}
     ports:
       - "80:80"
     networks:
@@ -23,7 +28,7 @@ services:
     networks:
       auth_network:
         aliases:
-          - mongoauth
+          - ${MONGO_HOSTNAME}
     volumes:
       - 'auth_mongo_volume:/data/db'
     mem_limit: 1000m
@@ -36,7 +41,7 @@ services:
     networks:
       auth_network:
         aliases:
-          - redisauth
+          - ${REDIS_HOSTNAME}
     mem_limit: 1000m
     restart: "unless-stopped"
 

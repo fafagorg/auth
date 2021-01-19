@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 
 const {
+  MONGO_HOSTNAME,
   MONGO_PORT,
   MONGO_DB
 } = process.env;
@@ -12,13 +13,10 @@ const options = {
   useUnifiedTopology: true
 };
 
-let url;
+const url = 'mongodb://' + MONGO_HOSTNAME + ':' + MONGO_PORT + '/' + MONGO_DB;
 
-if (MONGO_PORT && MONGO_DB) {
-  url = `mongodb://mongoauth/${MONGO_DB}`;
-} else {
-  url = 'mongodb://localhost:27017/fafago_user_db';
-}
+console.log('Connecting to mongo (URL: ' + url + ')');
+
 const MONGO_RETRY_INTERVAL = 10000; // In milliseconds
 
 const connect = () => {

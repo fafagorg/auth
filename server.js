@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config();
+
 const serverPort = process.env.PORT || 8081;
 
 const deploy = (env) => {
@@ -12,6 +14,8 @@ const deploy = (env) => {
 
     const express = require('express');
     const app = express();
+    const cors = require('cors');
+    app.use(cors());
     const bodyParser = require('body-parser');
 
     process.env.TOKEN_EXPIRATION = '24h';
@@ -19,7 +23,8 @@ const deploy = (env) => {
     process.env.SEED_AUTENTICATION = process.env.SEED_AUTENTICATION || 'seed-develop';
 
     app.use(bodyParser.json({
-      strict: false
+      strict: false,
+      limit: '10mb'
     }));
     const oasTools = require('oas-tools');
     const jsyaml = require('js-yaml');

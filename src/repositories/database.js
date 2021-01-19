@@ -1,6 +1,20 @@
 const userModel = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const cloudinary = require('cloudinary');
+
+const {
+  CLOUDINARY_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET
+} = process.env;
+
+cloudinary.config({
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET
+});
 
 // Get all users
 exports.getUsers = async () => {
@@ -27,13 +41,51 @@ exports.updateUser = async (username, user) => {
 
 // Register
 
+function decodeBase64Image (dataString) {
+  /*eslint-disable */
+  const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/); 
+  /* eslint-enable */
+
+  const response = {};
+
+  if (matches.length !== 3) {
+    return new Error('Invalid input string');
+  }
+
+  response.type = matches[1];
+  response.data = Buffer.from(matches[2], 'base64');
+  // response.data = new Buffer(matches[2], 'base64');
+
+  return response;
+}
+
 exports.addUser = async (user) => {
   return new Promise((resolve, reject) => {
-    userModel.findOne({ username: user.username }).exec().then((u) => {
+    userModel.findOne({ username: user.username }).exec().then(async (u) => {
       if (u != null) {
         resolve(false);
       } else {
+        if (user.photo !== '' && user.photo !== undefined) {
+          const name = Math.random().toString(36).substring(7);
+          let directory = 'temp/';
+          if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory);
+          }
+          directory = directory + name + '.jpg';
+
+          const imageBuffer = decodeBase64Image(user.photo);
+          fs.writeFile(directory, imageBuffer.data, function (err) { console.log(err); });
+          const res = await cloudinary.v2.uploader.upload(directory);
+          user.photo = res.url;
+
+          try {
+            fs.unlinkSync(directory);
+          } catch (err) {
+            console.error(err);
+          }
+        }
         user.password = bcrypt.hashSync(user.password, 10);
+
         userModel.create(user).then((m) => {
           resolve(true);
         }).catch((err) => {
