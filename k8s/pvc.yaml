@@ -1,0 +1,192 @@
+apiVersion: apps/v1
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: auth-main-redis
+  namespace: app
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data/auth/pro"
+  claimRef:
+    name: auth-main-redis
+    namespace: app
+---
+apiVersion: apps/v1  
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: auth-main-redis
+  namespace: app
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+---
+apiVersion: apps/v1
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: auth-release-redis
+  namespace: app
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data/auth/pre"
+  claimRef:
+    name: auth-release-redis
+    namespace: app
+---
+apiVersion: apps/v1  
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: auth-release-redis
+  namespace: app
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+---
+apiVersion: apps/v1
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: auth-develop-redis
+  namespace: app
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data/auth/dev"
+  claimRef:
+    name: auth-develop-redis
+    namespace: app
+---
+apiVersion: apps/v1  
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: auth-develop-redis
+  namespace: app
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+---
+apiVersion: apps/v1
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: auth-main-mongo
+  namespace: app
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data/auth/pro"
+  claimRef:
+    name: auth-main-mongo
+    namespace: app
+---
+apiVersion: apps/v1  
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: auth-main-mongo
+  namespace: app
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+---
+apiVersion: apps/v1
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: auth-release-mongo
+  namespace: app
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data/auth/pre"
+  claimRef:
+    name: auth-release-mongo
+    namespace: app
+---
+apiVersion: apps/v1  
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: auth-release-mongo
+  namespace: app
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+---
+apiVersion: apps/v1
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: auth-develop-mongo
+  namespace: app
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data/auth/dev"
+  claimRef:
+    name: auth-develop-mongo
+    namespace: app
+---
+apiVersion: apps/v1  
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: auth-develop-mongo
+  namespace: app
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+---

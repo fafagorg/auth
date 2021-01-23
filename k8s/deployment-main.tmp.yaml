@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: seedautentication-auth-$BRANCH_NAME
+  name: seedautentication-auth-main
   namespace: app
 type: Opaque
 data:
@@ -10,19 +10,19 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-$BRANCH_NAME
+  name: auth-main
   namespace: app
   labels:
-    app: auth-$BRANCH_NAME
+    app: auth-main
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth-$BRANCH_NAME
+      app: auth-main
   template:
     metadata:
       labels:
-        app: auth-$BRANCH_NAME
+        app: auth-main
     spec:
       containers:
       - name: auth
@@ -43,7 +43,7 @@ spec:
           - name: SEED_AUTENTICATION
             valueFrom:
               secretKeyRef:
-                name: seedautentication-auth-$BRANCH_NAME
+                name: seedautentication-auth-main
                 key: SEED_AUTENTICATION
           - name: REDIS_HOSTNAME
             value: localhost
@@ -57,7 +57,20 @@ spec:
         image: redis:6.0.9-alpine
         ports:
         - containerPort: 6379
+        volumeMounts:
+          - mountPath: "/data"
+            name: auth-develop-redis
       - name: mongo
         image: mongo:4.4.3-bionic
         ports:
         - containerPort: 27017
+        volumeMounts:
+          - mountPath: "/data"
+            name: auth-develop-mongo
+      volumes:
+        - name: auth-develop-redis
+          persistentVolumeClaim:
+            claimName: auth-develop-redis
+        - name: auth-develop-mongo
+          persistentVolumeClaim:
+            claimName: auth-develop-mongo
