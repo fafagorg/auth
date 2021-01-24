@@ -49,7 +49,9 @@ module.exports.authLogin = function authLogin (req, res, next) {
     if (err.status && err.message) {
       res.status(err.status).send({ err: err.message });
     }
-    res.status(500).send({ err });
+    res.status(401).send({
+      err: 'Username or password wrong'
+    });
   });
 };
 

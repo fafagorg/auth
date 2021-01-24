@@ -23,7 +23,7 @@ describe('Tests array', function () {
   before((done) => {
     server.deploy('test').then(() => {
       setTimeout(() => {
-        console.log("\n\n----------------- Test-----------------\n\n");
+        console.log("\n\n----------------- Test-----------------\n");
         done();
       }, 1000);
     }).catch((err) => {
@@ -69,7 +69,7 @@ function apiDBControllersTest() {
       });
   });
 
-  it('#userPOST - Should respond with a 201', function (done) {
+  it('#userRegister - Should respond with a 201', function (done) {
     const url = baseURL + '/api/v1/auth/register';
     const body = exampleUser;
     axios
@@ -84,7 +84,7 @@ function apiDBControllersTest() {
       });
   });
 
-  it('#userPOST(Same username) - Should respond with a 409', function (done) {
+  it('#userRegister(Same username) - Should respond with a 409', function (done) {
     const url = baseURL + '/api/v1/auth/register';
     const body = exampleUser;
     axios
@@ -126,6 +126,24 @@ function apiDBControllersTest() {
       .catch((err) => {
         console.log(err.message);
         assert.fail('Error on request');
+      });
+  });
+
+  it('#authLogin(wrong credentials) - Should respond with a 401', function (done) {
+    const url = baseURL + '/api/v1/auth/login/';
+    body = {
+      username: "veryStrangeName",
+      password: "veryStrangePass"
+    };
+
+    axios
+      .post(url, body)
+      .then((response) => {
+        assert.fail('POST should have failed');
+      })
+      .catch((err) => {
+        assert.strictEqual(401, err.response.status);
+        done();
       });
   });
 
