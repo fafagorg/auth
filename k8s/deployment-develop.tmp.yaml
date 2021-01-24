@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: seedautentication-auth-develop
+  namespace: app
+type: Opaque
+data:
+  SEED_AUTENTICATION: bWVnYXVsdHJhcmFuZG9tc2VlZA==
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-develop
+  namespace: app
+  labels:
+    app: auth-develop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-develop
+  template:
+    metadata:
+      labels:
+        app: auth-develop
+    spec:
+      containers:
+      - name: auth
+        image: $DOCKER_IMAGES
+        ports:
+        - containerPort: 80
+        env:
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "80"
+          - name: MONGO_HOSTNAME
+            value: localhost
+          - name: MONGO_PORT
+            value: "27017"
+          - name: MONGO_DB
+            value: fafago_user_db
+          - name: SEED_AUTENTICATION
+            valueFrom:
+              secretKeyRef:
+                name: seedautentication-auth-develop
+                key: SEED_AUTENTICATION
+          - name: REDIS_HOSTNAME
+            value: localhost
+          - name: REDIS_PORT
+            value: "6379"
+          - name: PRODUCTS_HOSTNAME
+            value: http://10.0.15.243:8080
+          - name: REVIEWS_HOSTNAME
+            value: http://10.0.10.218:80
+      - name: redis
+        image: redis:6.0.9-alpine
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+          - mountPath: "/data"
+            name: auth-develop-redis
+      - name: mongo
+        image: mongo:4.4.3-bionic
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+          - mountPath: "/data"
+            name: auth-develop-mongo
+      volumes:
+        - name: auth-develop-redis
+          persistentVolumeClaim:
+            claimName: auth-develop-redis
+        - name: auth-develop-mongo
+          persistentVolumeClaim:
+            claimName: auth-develop-mongo

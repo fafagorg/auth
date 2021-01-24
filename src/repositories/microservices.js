@@ -4,7 +4,7 @@ const redis = require('redis');
 const CACHE_TTL = 5; // In seconds
 const PRODUCTS_URL = process.env.PRODUCTS_HOSTNAME;
 const REVIEWS_URL = process.env.REVIEWS_HOSTNAME;
-const MESSAGING_URL = process.env.CHAT_HOSTNAME;
+// const MESSAGING_URL = process.env.CHAT_HOSTNAME;
 
 // Redis connection
 const redisClient = redis.createClient({
@@ -67,7 +67,7 @@ exports.getUserReviews = (username) => {
 };
 
 // Reviews
-exports.getUserChats = (username) => {
+/* exports.getUserChats = (username) => {
   return new Promise((resolve, reject) => {
     getCache('userChats-' + username).then((cached) => {
       if (cached === null) {
@@ -89,7 +89,7 @@ exports.getUserChats = (username) => {
       });
     });
   });
-};
+}; */
 
 // Cache functions
 
