@@ -1,11 +1,10 @@
 const assert = require('assert');
 const axios = require('axios');
-const { compare } = require('bcrypt');
-const { response } = require('express');
+const nock = require('nock');
+const fs = require('fs');
+const path = require('path');
 
 const server = require('../server');
-const user = require('../src/models/user');
-const nockController = require('./nockController');
 
 const baseURL = 'http://localhost:' + server.serverPort;
 
@@ -22,44 +21,40 @@ let token;
 
 describe('Tests array', function () {
   before((done) => {
-    server
-      .deploy('test')
-      .then(() => {
-        nockController
-          .instantiateMockups()
-          .then(() => {
-            done();
-          })
-          .catch((err) => {
-            console.log(err.message);
-            done(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err.message);
-        done(err);
-      });
+    server.deploy('test').then(() => {
+      setTimeout(() => {
+        console.log("\n\n----------------- Test-----------------\n\n");
+        done();
+      }, 1000);
+    }).catch((err) => {
+      console.log(err.message);
+      done(err);
+    });
   });
 
   // Delete this when tests are created
-  describe('#apiDBControllersTest()', function () {
+  describe('#API DB Controllers Test()', function () {
     apiDBControllersTest();
   });
 
-  /* describe('#apiMockControllersTest()', function () {
+  describe('#API Integrations Tests()', function () {
     apiMockControllersTest();
   });
 
-  describe('#apiMockControllersTestCached()', function () {
+  describe('#API Integrations Tests Cached()', function () {
     apiMockControllersTest();
-  }); */
+  });
+
+  describe('#API DB Controllers Delete Test()', function () {
+    apiDBControllersDeleteTest();
+  });
 
   after((done) => {
     server.undeploy(done);
   });
 });
 
-function apiDBControllersTest () {
+function apiDBControllersTest() {
   it('#usersGET - Should respond with a 200 Ok', function (done) {
     const url = baseURL + '/api/v1/users';
     axios
@@ -170,7 +165,67 @@ function apiDBControllersTest () {
         assert.fail('Error on request');
       });
   });
+}
 
+function apiMockControllersTest() {
+  it('#profileGET - Should respond with a 200 Ok', function (done) {
+    const url = baseURL + '/api/v1/profile/' + exampleUser.username;
+    
+    nock(process.env.PRODUCTS_HOSTNAME)
+      .get("/api/v1/products/client/" + exampleUser.username)
+      .reply(200, [
+        {
+          "name": "product1",
+          "category": "category1",
+          "price": "130",
+          "seller": exampleUser.username,
+          "id": 1
+        }
+      ]
+      );
+
+    nock(process.env.REVIEWS_HOSTNAME)
+      .get("/api/v1/reviews/client/" + exampleUser.username)
+      .reply(200, [
+        {
+          "title": "Not that good bro",
+          "score": 1,
+          "description": "Meh",
+          "reviewedProductId": "product1",
+          "reviewedClientId": "paco",
+          "comments": [
+            {
+              "id": "48057bfe-c0ca-445c-83dd-14ef979ca5fc",
+              "clientId": "600437d985639e47dad82d87",
+              "body": "Be careful buddy 2222",
+              "date": "2021-01-24T17:43:05.881Z"
+            }
+          ],
+          "id": "550daa56-989b-41c7-8e25-c9ce4ea2f2c5",
+          "dateCreated": "2021-01-24T17:42:42.075Z",
+          "externalScore": "Neutral",
+          "reviewerClientId": "600437d985639e47dad82d87"
+        }
+      ]);
+
+    axios
+      .get(url)
+      .then((response) => {
+        const expectedResponse = JSON.parse(fs.readFileSync(path.join(__dirname, './profileResponse.json'), 'utf-8'));
+        const toCompare = {... response.data};
+        delete toCompare._id;
+        assert.deepStrictEqual(expectedResponse, toCompare);
+        assert.strictEqual(200, response.status);
+        done();
+      })
+      .catch((err) => {
+        console.log(err.message);
+        assert.fail('Error on request');
+      });
+  });
+}
+
+function apiDBControllersDeleteTest() {
   it('#usersDelete - Should respond with a 202', function (done) {
     const url = baseURL + '/api/v1/users/' + exampleUser.username;
 
@@ -191,7 +246,8 @@ function apiDBControllersTest () {
     axios
       .get(url)
       .then((response) => {
-        assert.fail('User should not exist');})
+        assert.fail('User should not exist');
+      })
       .catch((err) => {
         assert.strictEqual(404, err.response.status);
         done();
@@ -212,31 +268,5 @@ function apiDBControllersTest () {
         assert.strictEqual(404, err.response.status);
         done();
       });
-  });
-}
-
-function apiMockControllersTest () {
-  describe('#productsGET', function () {
-    it(
-      'should respond with ' +
-        testRequest.responseStatusCode +
-        ' (' +
-        testRequest.name +
-        ')',
-      function (done) {
-        axios
-          .post(url, body, options)
-          .then((response) => {
-            /* assert.notStrictEqual(expected, response);
-        assert.deepStrictEqual(expected, response);
-        assert.strictEqual(expected, response); */
-            done();
-          })
-          .catch((err) => {
-            console.log(err.message);
-            assert.fail('Error on request');
-          });
-      }
-    );
   });
 }
