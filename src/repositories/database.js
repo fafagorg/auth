@@ -27,38 +27,17 @@ exports.getUser = async (username) => {
 };
 
 // Delete an user
-
 exports.deleteUser = async (username) => {
   return await userModel.deleteOne({ username: username }).exec();
 };
 
 // Update an user
-
 exports.updateUser = async (username, user) => {
   user.password = bcrypt.hashSync(user.password, 10);
   return await userModel.updateOne({ username: username }, user).exec();
 };
 
 // Register
-
-function decodeBase64Image (dataString) {
-  /*eslint-disable */
-  const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/); 
-  /* eslint-enable */
-
-  const response = {};
-
-  if (matches.length !== 3) {
-    return new Error('Invalid input string');
-  }
-
-  response.type = matches[1];
-  response.data = Buffer.from(matches[2], 'base64');
-  // response.data = new Buffer(matches[2], 'base64');
-
-  return response;
-}
-
 exports.addUser = async (user) => {
   return new Promise((resolve, reject) => {
     userModel.findOne({ username: user.username }).exec().then(async (u) => {
@@ -97,7 +76,6 @@ exports.addUser = async (user) => {
 };
 
 // Login
-
 exports.login = async (username, password) => {
   return new Promise((resolve, reject) => {
     userModel.findOne({ username: username }).exec().then((user) => {
@@ -121,7 +99,6 @@ exports.login = async (username, password) => {
 };
 
 // Validate token auth
-
 exports.validateToken = async (token) => {
   return new Promise((resolve, reject) => {
     if (token) {
@@ -137,3 +114,22 @@ exports.validateToken = async (token) => {
     }
   });
 };
+
+// Aux functions
+function decodeBase64Image (dataString) {
+  /*eslint-disable */
+  const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/); 
+  /* eslint-enable */
+
+  const response = {};
+
+  if (matches.length !== 3) {
+    return new Error('Invalid input string');
+  }
+
+  response.type = matches[1];
+  response.data = Buffer.from(matches[2], 'base64');
+  // response.data = new Buffer(matches[2], 'base64');
+
+  return response;
+}

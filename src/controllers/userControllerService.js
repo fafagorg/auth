@@ -81,7 +81,11 @@ module.exports.getProfile = function getProfile (req, res, next) {
           products = axiosObject.data;
           resolve();
         }).catch(err => {
-          console.log(err);
+          if (err.message.includes('404')) {
+            console.log('Products request - 404');
+          } else {
+            console.log(err);
+          }
           resolve();
         });
       });
@@ -91,7 +95,11 @@ module.exports.getProfile = function getProfile (req, res, next) {
           reviews = axiosObject.data;
           resolve();
         }).catch(err => {
-          console.log(err);
+          if (err.message.includes('404')) {
+            console.log('Reviews request - 404');
+          } else {
+            console.log(err);
+          }
           resolve();
         });
       });
