@@ -257,6 +257,8 @@ components:
         phone:
           type: string
           minLength: 1
+        photo:
+          type: string
       required:
         - username
         - name
@@ -283,7 +285,7 @@ components:
           minLength: 1
         password:
           type: string
-          minLength: 1
+          minLength: 3
         photo:
           type: string
       required:
