@@ -247,6 +247,10 @@ function apiDBControllersDeleteTest() {
   it('#usersDelete - Should respond with a 202', function (done) {
     const url = baseURL + '/api/v1/users/' + exampleUser.username;
 
+    nock(process.env.PRODUCTS_HOSTNAME)
+      .delete("/api/v1/products/client/" + exampleUser.username)
+      .reply(204);
+
     axios
       .delete(url)
       .then((response) => {

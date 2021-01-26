@@ -30,14 +30,23 @@ module.exports.findUser = function findUser (req, res, next) {
 };
 
 module.exports.deleteUser = function deleteUser (req, res, next) {
-  databaseRepository.deleteUser(req.username.value).then((doc) => {
-    res.status(202).send();
-  }).catch((err) => {
-    if (err.status && err.message) {
-      res.status(err.status).send({ err: err.message });
-    }
-    res.status(500).send({ err });
+  // microservicesRepository.deleteUserReviews(req.username.value).then(() => {
+  microservicesRepository.deleteUserProducts(req.username.value).then(() => {
+    databaseRepository.deleteUser(req.username.value).then((doc) => {
+      res.status(202).send();
+    }).catch((err) => {
+      console.log('User could not be deleted', err);
+      if (err.status && err.message) {
+        res.status(err.status).send({ err: err.message });
+      }
+      res.status(500).send({ err });
+    });
+  }).catch(err => {
+    console.log('User Products could not be deleted\n', err);
   });
+  // }).catch(err => {
+  //  console.log("User Reviews could not be deleted\n", err);
+  // })
 };
 
 module.exports.updateUser = function updateUser (req, res, next) {
