@@ -96,7 +96,7 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
   gCloudDeployment-Dev:
-    if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push'}}
+    if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push'}}
     name: Deploy DEVELOPMENT code automatically to google cloud
     runs-on: ubuntu-latest
     strategy:
