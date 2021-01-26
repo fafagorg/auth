@@ -188,7 +188,7 @@ function apiDBControllersTest() {
 function apiMockControllersTest() {
   it('#profileGET - Should respond with a 200 Ok', function (done) {
     const url = baseURL + '/api/v1/profile/' + exampleUser.username;
-    
+
     nock(process.env.PRODUCTS_HOSTNAME)
       .get("/api/v1/products/client/" + exampleUser.username)
       .reply(200, [
@@ -226,11 +226,35 @@ function apiMockControllersTest() {
         }
       ]);
 
+    nock(process.env.REVIEWS_HOSTNAME)
+      .get("/api/v1/reviews/author/" + exampleUser.username)
+      .reply(200, [
+        {
+          "title": "Not that good bro",
+          "score": 1,
+          "description": "Meh",
+          "reviewedProductId": "product1",
+          "reviewedClientId": "paco",
+          "comments": [
+            {
+              "id": "48057bfe-c0ca-445c-83dd-14ef979ca5fc",
+              "clientId": "600437d985639e47dad82d87",
+              "body": "Be careful buddy 2222",
+              "date": "2021-01-24T17:43:05.881Z"
+            }
+          ],
+          "id": "550daa56-989b-41c7-8e25-c9ce4ea2f2c5",
+          "dateCreated": "2021-01-24T17:42:42.075Z",
+          "externalScore": "Neutral",
+          "reviewerClientId": "600437d985639e47dad82d87"
+        }
+      ]);
+
     axios
       .get(url)
       .then((response) => {
         const expectedResponse = JSON.parse(fs.readFileSync(path.join(__dirname, './profileResponse.json'), 'utf-8'));
-        const toCompare = {... response.data};
+        const toCompare = { ...response.data };
         delete toCompare._id;
         assert.deepStrictEqual(expectedResponse, toCompare);
         assert.strictEqual(200, response.status);
@@ -246,6 +270,10 @@ function apiMockControllersTest() {
 function apiDBControllersDeleteTest() {
   it('#usersDelete - Should respond with a 202', function (done) {
     const url = baseURL + '/api/v1/users/' + exampleUser.username;
+
+    nock(process.env.PRODUCTS_HOSTNAME)
+      .delete("/api/v1/products/client/" + exampleUser.username)
+      .reply(204);
 
     axios
       .delete(url)

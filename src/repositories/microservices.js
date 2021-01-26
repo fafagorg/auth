@@ -4,7 +4,7 @@ const redis = require('redis');
 const CACHE_TTL = 5; // In seconds
 const PRODUCTS_URL = process.env.PRODUCTS_HOSTNAME;
 const REVIEWS_URL = process.env.REVIEWS_HOSTNAME;
-// const MESSAGING_URL = process.env.CHAT_HOSTNAME;
+const MESSAGING_URL = process.env.CHAT_HOSTNAME;
 
 // Redis connection
 const redisClient = redis.createClient({
@@ -41,6 +41,16 @@ exports.getUserProducts = (username) => {
   });
 };
 
+exports.deleteUserProducts = (username, token) => {
+  return new Promise((resolve, reject) => {
+    axios.delete(PRODUCTS_URL + '/api/v1/products/client/' + username, { headers: { Authorization: 'Bearer ' + token } }).then(function (axiosResponse) {
+      resolve(axiosResponse);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
 // Reviews
 exports.getUserReviews = (username) => {
   return new Promise((resolve, reject) => {
@@ -57,11 +67,45 @@ exports.getUserReviews = (username) => {
       }
     }).catch(err => {
       console.log('error - Redis cache failed. Requesting instead. Redis error:\n', err.message);
-      axios.get(REVIEWS_URL + '/reviews/client/' + username).then(function (axiosResponse) {
+      axios.get(REVIEWS_URL + '/api/v1/reviews/client/' + username).then(function (axiosResponse) {
         resolve(axiosResponse);
       }).catch(function (error) {
         reject(error);
       });
+    });
+  });
+};
+
+exports.getAuthorReviews = (username) => {
+  return new Promise((resolve, reject) => {
+    getCache('authorReviews-' + username).then((cached) => {
+      if (cached === null) {
+        axios.get(REVIEWS_URL + '/api/v1/reviews/author/' + username).then(function (axiosResponse) {
+          setCache('authorReviews-' + username, axiosResponse);
+          resolve(axiosResponse);
+        }).catch(function (error) {
+          reject(error);
+        });
+      } else {
+        resolve(cached);
+      }
+    }).catch(err => {
+      console.log('error - Redis cache failed. Requesting instead. Redis error:\n', err.message);
+      axios.get(REVIEWS_URL + '/api/v1/reviews/author/' + username).then(function (axiosResponse) {
+        resolve(axiosResponse);
+      }).catch(function (error) {
+        reject(error);
+      });
+    });
+  });
+};
+
+exports.deleteUserReviews = (username) => {
+  return new Promise((resolve, reject) => {
+    axios.delete(REVIEWS_URL + '/api/v1/reviews/client/' + username).then(function (axiosResponse) {
+      resolve(axiosResponse);
+    }).catch(function (error) {
+      reject(error);
     });
   });
 };
@@ -90,6 +134,16 @@ exports.getUserReviews = (username) => {
     });
   });
 }; */
+
+exports.deleteUserChats = (username) => {
+  return new Promise((resolve, reject) => {
+    axios.get(MESSAGING_URL + '/messenger/room').then(function (axiosResponse) {
+      resolve(axiosResponse);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
 
 // Cache functions
 

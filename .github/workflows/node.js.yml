@@ -95,4 +95,60 @@ jobs:
           tags: fafagoauth/auth:test
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+  gCloudDeployment-Dev:
+    if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push'}}
+    name: Deploy DEVELOPMENT code automatically to google cloud
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    needs: buildTest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+      - name: Deploy in Kubernetes
+        env:
+          GCLOUD_API_KEY: "${{ secrets.GCLOUD_API_KEY }}"
+          CLOUDINARY_API_SECRET_B64: "${{ secrets.CLOUDINARY_API_SECRET_B64 }}"
+          CLOUDINARY_API_KEY_B64: "${{ secrets.CLOUDINARY_API_KEY_B64 }}"
+        run: |
+          export DOCKER_IMAGES=fafagoauth/auth:test
+          export BRANCH_NAME=develop
+          echo $(ls)
+          /usr/bin/envsubst < ./k8s/deployment-$BRANCH_NAME.tmp.yaml > ./k8s/deployment.yaml
+          /usr/bin/envsubst < ./k8s/service.tmp.yaml > ./k8s/service.yaml
+          echo "$GCLOUD_API_KEY" > account.json
+          gcloud auth activate-service-account fis-deploy@fis-us.iam.gserviceaccount.com --key-file=account.json
+          gcloud container clusters get-credentials cluster-1 --zone europe-west1-b --project fis-us
+          kubectl apply -f ./k8s/deployment.yaml
+          kubectl apply -f ./k8s/service.yaml
+          kubectl rollout status deployment.apps/auth-$BRANCH_NAME -n app
+  gCloudDeployment-Prod:
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push'}}
+    name: Deploy PRODUCTION code automatically to google cloud
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    needs: buildProd
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+      - name: Deploy in Kubernetes
+        env:
+          GCLOUD_API_KEY: "${{ secrets.GCLOUD_API_KEY }}"
+          CLOUDINARY_API_SECRET_B64: "${{ secrets.CLOUDINARY_API_SECRET_B64 }}"
+          CLOUDINARY_API_KEY_B64: "${{ secrets.CLOUDINARY_API_KEY_B64 }}"
+        run: |
+          export DOCKER_IMAGES=fafagoauth/auth:latest
+          export BRANCH_NAME=main
+          echo $(ls)
+          /usr/bin/envsubst < ./k8s/deployment-$BRANCH_NAME.tmp.yaml > ./k8s/deployment.yaml
+          /usr/bin/envsubst < ./k8s/service.tmp.yaml > ./k8s/service.yaml
+          echo "$GCLOUD_API_KEY" > account.json
+          gcloud auth activate-service-account fis-deploy@fis-us.iam.gserviceaccount.com --key-file=account.json
+          gcloud container clusters get-credentials cluster-1 --zone europe-west1-b --project fis-us
+          kubectl apply -f ./k8s/deployment.yaml
+          kubectl apply -f ./k8s/service.yaml
+          kubectl rollout status deployment.apps/auth-$BRANCH_NAME -n app
 

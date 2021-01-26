@@ -30,14 +30,23 @@ module.exports.findUser = function findUser (req, res, next) {
 };
 
 module.exports.deleteUser = function deleteUser (req, res, next) {
-  databaseRepository.deleteUser(req.username.value).then((doc) => {
-    res.status(202).send();
-  }).catch((err) => {
-    if (err.status && err.message) {
-      res.status(err.status).send({ err: err.message });
-    }
-    res.status(500).send({ err });
+  // microservicesRepository.deleteUserReviews(req.username.value).then(() => {
+  microservicesRepository.deleteUserProducts(req.username.value, res.req.headers.authorization).then(() => {
+    databaseRepository.deleteUser(req.username.value).then((doc) => {
+      res.status(202).send();
+    }).catch((err) => {
+      console.log('User could not be deleted', err);
+      if (err.status && err.message) {
+        res.status(err.status).send({ err: err.message });
+      }
+      res.status(500).send({ err });
+    });
+  }).catch(err => {
+    console.log('User Products could not be deleted\n', err);
   });
+  // }).catch(err => {
+  //  console.log("User Reviews could not be deleted\n", err);
+  // })
 };
 
 module.exports.updateUser = function updateUser (req, res, next) {
@@ -75,6 +84,7 @@ module.exports.getProfile = function getProfile (req, res, next) {
     } else {
       let products = [];
       let reviews = [];
+      let authoredReviews = [];
 
       const productsPromise = new Promise((resolve, reject) => {
         microservicesRepository.getUserProducts(req.username.value).then(axiosObject => {
@@ -104,10 +114,27 @@ module.exports.getProfile = function getProfile (req, res, next) {
         });
       });
 
-      Promise.all([productsPromise, reviewsPromise]).then(() => {
+      const authoredReviewsPromise = new Promise((resolve, reject) => {
+        microservicesRepository.getAuthorReviews(req.username.value).then(axiosObject => {
+          authoredReviews = axiosObject.data;
+          resolve();
+        }).catch(err => {
+          if (err.message.includes('404')) {
+            console.log('Authored reviews request - 404');
+          } else {
+            console.log(err);
+          }
+          resolve();
+        });
+      });
+
+      Promise.all([productsPromise, reviewsPromise, authoredReviewsPromise]).then(() => {
         const responseObject = JSON.parse(JSON.stringify(doc[0]));
         responseObject.products = [...products];
-        responseObject.reviews = [...reviews];
+        responseObject.reviews = {
+          reviewsDone: [...authoredReviews],
+          reviewsReceived: [...reviews]
+        };
         res.status(200).send(responseObject);
       });
     }
