@@ -4,7 +4,7 @@ const redis = require('redis');
 const CACHE_TTL = 5; // In seconds
 const PRODUCTS_URL = process.env.PRODUCTS_HOSTNAME;
 const REVIEWS_URL = process.env.REVIEWS_HOSTNAME;
-// const MESSAGING_URL = process.env.CHAT_HOSTNAME;
+const MESSAGING_URL = process.env.CHAT_HOSTNAME;
 
 // Redis connection
 const redisClient = redis.createClient({
@@ -41,6 +41,16 @@ exports.getUserProducts = (username) => {
   });
 };
 
+exports.deleteUserProducts = (username) => {
+  return new Promise((resolve, reject) => {
+    axios.delete(PRODUCTS_URL + '/api/v1/products/client/' + username).then(function (axiosResponse) {
+      resolve(axiosResponse);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
+
 // Reviews
 exports.getUserReviews = (username) => {
   return new Promise((resolve, reject) => {
@@ -62,6 +72,16 @@ exports.getUserReviews = (username) => {
       }).catch(function (error) {
         reject(error);
       });
+    });
+  });
+};
+
+exports.deleteUserReviews = (username) => {
+  return new Promise((resolve, reject) => {
+    axios.delete(REVIEWS_URL + '/api/v1/reviews/client/' + username).then(function (axiosResponse) {
+      resolve(axiosResponse);
+    }).catch(function (error) {
+      reject(error);
     });
   });
 };
@@ -90,6 +110,16 @@ exports.getUserReviews = (username) => {
     });
   });
 }; */
+
+exports.deleteUserChats = (username) => {
+  return new Promise((resolve, reject) => {
+    axios.get(MESSAGING_URL + '/messenger/room').then(function (axiosResponse) {
+      resolve(axiosResponse);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+};
 
 // Cache functions
 
