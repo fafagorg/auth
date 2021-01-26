@@ -43,7 +43,7 @@ exports.getUserProducts = (username) => {
 
 exports.deleteUserProducts = (username, token) => {
   return new Promise((resolve, reject) => {
-    axios.delete(PRODUCTS_URL + '/api/v1/products/client/' + username, {}, {Authorization: 'Bearer ' + token}).then(function (axiosResponse) {
+    axios.delete(PRODUCTS_URL + '/api/v1/products/client/' + username, {}, { Authorization: 'Bearer ' + token }).then(function (axiosResponse) {
       resolve(axiosResponse);
     }).catch(function (error) {
       reject(error);

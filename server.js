@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 
-const serverPort = process.env.PORT || 8081;
+const serverPort = process.env.PORT || 8089;
 
 const deploy = (env) => {
   return new Promise((resolve, reject) => {
