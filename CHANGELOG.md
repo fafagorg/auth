@@ -1,4 +1,13 @@
-# 1.1.0 (2021-01-26)
+## [1.1.1](https://github.com/fafagorg/auth/compare/v1.1.0...v1.1.1) (2021-01-26)
+
+
+### Bug Fixes
+
+* workflow ([5cabe2d](https://github.com/fafagorg/auth/commit/5cabe2db66dcc7711e8d1b6b38aea77fbf455815))
+
+
+
+# [1.1.0](https://github.com/fafagorg/auth/compare/90097c8151f041dc54131fdd822208777f0e2a79...v1.1.0) (2021-01-26)
 
 
 ### Bug Fixes
