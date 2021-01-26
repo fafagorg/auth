@@ -7,6 +7,24 @@ type: Opaque
 data:
   SEED_AUTENTICATION: bWVnYXVsdHJhcmFuZG9tc2VlZA==
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: api-key-auth-release
+  namespace: app
+type: Opaque
+data:
+  CLOUDINARY_API_KEY: NDM3NjYzMzU0NDgxMTEz
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: api-secret-auth-release
+  namespace: app
+type: Opaque
+data:
+  CLOUDINARY_API_SECRET: Q0NiV05waXhtSHlON19XSGx0cHdLTkI1eFpn
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,37 +58,51 @@ spec:
             value: "27017"
           - name: MONGO_DB
             value: fafago_user_db
+          - name: CLOUDINARY_CLOUD_NAME
+            value: cloudinary://437663354481113:CCbWNpixmHyN7_WHltpwKNB5xZg@dpdvp23ws
+          - name: CLOUDINARY_NAME
+            value: dpdvp23ws
           - name: SEED_AUTENTICATION
             valueFrom:
               secretKeyRef:
                 name: seedautentication-auth-release
                 key: SEED_AUTENTICATION
+          - name: CLOUDINARY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: api-key-auth-release
+                key: CLOUDINARY_API_KEY
+          - name: CLOUDINARY_API_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: api-secret-auth-release
+                key: CLOUDINARY_API_SECRET
           - name: REDIS_HOSTNAME
             value: localhost
           - name: REDIS_PORT
             value: "6379"
           - name: PRODUCTS_HOSTNAME
-            value: http://10.0.5.146:8080
+            value: http://10.0.15.243:8080
           - name: REVIEWS_HOSTNAME
-            value: http://10.0.0.157:80
+            value: http://10.0.10.218:80
       - name: redis
         image: redis:6.0.9-alpine
         ports:
         - containerPort: 6379
         volumeMounts:
-          - mountPath: "/data"
-            name: auth-develop-redis
+          - mountPath: /data
+            name: auth-release-redis
       - name: mongo
         image: mongo:4.4.3-bionic
         ports:
         - containerPort: 27017
         volumeMounts:
-          - mountPath: "/data"
-            name: auth-develop-mongo
+          - mountPath: /data/db
+            name: auth-release-mongo
       volumes:
-        - name: auth-develop-redis
+        - name: auth-release-redis
           persistentVolumeClaim:
-            claimName: auth-develop-redis
-        - name: auth-develop-mongo
+            claimName: auth-release-redis
+        - name: auth-release-mongo
           persistentVolumeClaim:
-            claimName: auth-develop-mongo
+            claimName: auth-release-mongo
