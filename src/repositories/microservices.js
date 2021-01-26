@@ -67,7 +67,31 @@ exports.getUserReviews = (username) => {
       }
     }).catch(err => {
       console.log('error - Redis cache failed. Requesting instead. Redis error:\n', err.message);
-      axios.get(REVIEWS_URL + '/reviews/client/' + username).then(function (axiosResponse) {
+      axios.get(REVIEWS_URL + '/api/v1/reviews/client/' + username).then(function (axiosResponse) {
+        resolve(axiosResponse);
+      }).catch(function (error) {
+        reject(error);
+      });
+    });
+  });
+};
+
+exports.getAuthorReviews = (username) => {
+  return new Promise((resolve, reject) => {
+    getCache('authorReviews-' + username).then((cached) => {
+      if (cached === null) {
+        axios.get(REVIEWS_URL + '/api/v1/reviews/author/' + username).then(function (axiosResponse) {
+          setCache('authorReviews-' + username, axiosResponse);
+          resolve(axiosResponse);
+        }).catch(function (error) {
+          reject(error);
+        });
+      } else {
+        resolve(cached);
+      }
+    }).catch(err => {
+      console.log('error - Redis cache failed. Requesting instead. Redis error:\n', err.message);
+      axios.get(REVIEWS_URL + '/api/v1/reviews/author/' + username).then(function (axiosResponse) {
         resolve(axiosResponse);
       }).catch(function (error) {
         reject(error);

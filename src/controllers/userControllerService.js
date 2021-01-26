@@ -84,6 +84,7 @@ module.exports.getProfile = function getProfile (req, res, next) {
     } else {
       let products = [];
       let reviews = [];
+      let authoredReviews = [];
 
       const productsPromise = new Promise((resolve, reject) => {
         microservicesRepository.getUserProducts(req.username.value).then(axiosObject => {
@@ -113,10 +114,27 @@ module.exports.getProfile = function getProfile (req, res, next) {
         });
       });
 
-      Promise.all([productsPromise, reviewsPromise]).then(() => {
+      const authoredReviewsPromise = new Promise((resolve, reject) => {
+        microservicesRepository.getAuthorReviews(req.username.value).then(axiosObject => {
+          authoredReviews = axiosObject.data;
+          resolve();
+        }).catch(err => {
+          if (err.message.includes('404')) {
+            console.log('Authored reviews request - 404');
+          } else {
+            console.log(err);
+          }
+          resolve();
+        });
+      });
+
+      Promise.all([productsPromise, reviewsPromise, authoredReviewsPromise]).then(() => {
         const responseObject = JSON.parse(JSON.stringify(doc[0]));
         responseObject.products = [...products];
-        responseObject.reviews = [...reviews];
+        responseObject.reviews = {
+          reviewsDone: [...authoredReviews],
+          reviewsReceived: [...reviews]
+        };
         res.status(200).send(responseObject);
       });
     }
