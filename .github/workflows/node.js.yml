@@ -77,7 +77,7 @@ jobs:
         CI: true
   integrationTestMain:
     name: (main) Integration tests - Checkout infrastructure, install mocha and run tests (docker-compose up, mocha tests and docker-compose down)
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     needs: test
     runs-on: ubuntu-latest
     strategy:
