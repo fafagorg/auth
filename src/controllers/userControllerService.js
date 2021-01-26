@@ -31,7 +31,7 @@ module.exports.findUser = function findUser (req, res, next) {
 
 module.exports.deleteUser = function deleteUser (req, res, next) {
   // microservicesRepository.deleteUserReviews(req.username.value).then(() => {
-  microservicesRepository.deleteUserProducts(req.username.value).then(() => {
+  microservicesRepository.deleteUserProducts(req.username.value, req.headers.authorization).then(() => {
     databaseRepository.deleteUser(req.username.value).then((doc) => {
       res.status(202).send();
     }).catch((err) => {
