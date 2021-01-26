@@ -6,7 +6,7 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 
-# Introduction
+# Introduction.
 
 This repository contains all the code belonging to the authentication and clients microservice from the FAFAGO ecosystem built for the subject "Fundamentos de ingeniería del software para sistemas cloud" from "Máster en Ingeniería del Software: Cloud, Datos y Gestión TI" at University of Seville.
 
