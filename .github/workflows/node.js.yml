@@ -174,11 +174,17 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Build and push
-      id: docker_build
+      id: docker_build_test_sha
       uses: docker/build-push-action@v2
       with:
         push: true
         tags: fafagoauth/auth:test-${{ github.sha }}
+    - name: Build and push
+      id: docker_build_test
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: fafagoauth/auth:test
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
   gCloudDeployment-Prod:
