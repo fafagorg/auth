@@ -151,6 +151,12 @@ jobs:
       with:
         push: true
         tags: fafagoauth/auth:${{ steps.changelog.outputs.tag }}
+    - name: Build and push
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: fafagoauth/auth:latest
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}  
   buildTest:
@@ -172,7 +178,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: fafagoauth/auth:test
+        tags: fafagoauth/auth:test-${{ github.sha }}
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
   gCloudDeployment-Prod:
@@ -220,7 +226,7 @@ jobs:
         CLOUDINARY_API_SECRET_B64: "${{ secrets.CLOUDINARY_API_SECRET_B64 }}"
         CLOUDINARY_API_KEY_B64: "${{ secrets.CLOUDINARY_API_KEY_B64 }}"
       run: |
-        export DOCKER_IMAGES=fafagoauth/auth:test
+        export DOCKER_IMAGES=fafagoauth/auth:test-${{ github.sha }}
         export BRANCH_NAME=develop
         echo $(ls)
         /usr/bin/envsubst < ./k8s/deployment-$BRANCH_NAME.tmp.yaml > ./k8s/deployment.yaml
